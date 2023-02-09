@@ -13,7 +13,8 @@ int main() {
     PrintArray("Before Sbox",in);
     SubBytes(in);
     PrintArray("After Sbox",in);
-
+    ShiftRows(in);
+    PrintArray("After ShiftRows",in);
 }
 
 
@@ -52,11 +53,42 @@ void Cipher(byte* in[4*Nb], byte* out[4*Nb]) {
 
 
 /**
- * sub bytes 
+ * sub bytes
 */
 void SubBytes(byte* state) {
     for(int i = 0; i < 4*Nb; i++) {
         state[i] = s_box[state[i]];
+    }
+}
+
+
+/**
+ * shift rows
+*/
+void ShiftRows(byte* state) {
+    byte temp[Nb];
+    
+    for(int i = 1; i < 4; i++) {
+        // temp에 열 담기
+        for(int j = 0; j < Nb; j++) { //1,5,9,13 //2,6,10,14 //3,6,11,15
+            temp[j] = state[j*Nb+i];
+        }
+
+        // i번 만큼 왼쪽으로 이동
+        // TODO : 더 좋은 방법이 있지 않을까?
+        for(int k = i; k > 0; k--) {
+            byte t0 = (unsigned char)temp[0];
+            for(int l = 0; l < 3; l++) {
+                temp[l] = temp[l+1];
+            }
+            temp[3] = t0;
+
+        }
+
+        // state에 shift 된 것들 저장
+        for(int j = 0; j < Nb; j++) { //1,5,9,13 //2,6,10,14 //3,6,11,15
+            state[j*Nb+i] = temp[j];
+        }
     }
 }
 
