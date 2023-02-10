@@ -13,4 +13,8 @@ void SubBytes(byte* state);                     // 테스트 완료
 
 void ShiftRows(byte* state);                    // 테스트 완료
 
+void MixColumns(byte* state);
+
+byte xtime(byte byte1);
+
 void PrintArray(char* str, byte* state);

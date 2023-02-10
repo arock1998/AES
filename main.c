@@ -4,7 +4,6 @@
 
 
 
-
 int main() {
 
     byte in[16] = {0x19,0x3d,0xe3,0xbe,0xa0,0xf4,0xe2,0x2b,0x9a,0xc6,0x8d,0x2a,0xe9,0xf8,0x48,0x08};
@@ -15,6 +14,9 @@ int main() {
     PrintArray("After Sbox",in);
     ShiftRows(in);
     PrintArray("After ShiftRows",in);
+    MixColumns(in);
+    PrintArray("After MixColumns",in);
+
 }
 
 
@@ -77,7 +79,7 @@ void ShiftRows(byte* state) {
         // i번 만큼 왼쪽으로 이동
         // TODO : 더 좋은 방법이 있지 않을까?
         for(int k = i; k > 0; k--) {
-            byte t0 = (unsigned char)temp[0];
+            byte t0 = (byte)temp[0];
             for(int l = 0; l < 3; l++) {
                 temp[l] = temp[l+1];
             }
@@ -90,6 +92,37 @@ void ShiftRows(byte* state) {
             state[j*Nb+i] = temp[j];
         }
     }
+}
+
+
+/**
+ * mix columns
+*/
+void MixColumns(byte* state) {
+    byte temp[4*Nb];
+    for(int i = 0; i < 4*Nb; i++) {
+        temp[i] = state[i];
+    }
+
+    for(int i = 0; i < Nb; i++) {
+        state[4*i+0] = xtime(temp[4*i+0]) ^ xtime(temp[4*i+1]) ^ temp[4*i+1] ^ temp[4*i+2] ^ temp[4*i+3];
+        state[4*i+1] = xtime(temp[4*i+1]) ^ xtime(temp[4*i+2]) ^ temp[4*i+2] ^ temp[4*i+3] ^ temp[4*i+0];
+        state[4*i+2] = xtime(temp[4*i+2]) ^ xtime(temp[4*i+3]) ^ temp[4*i+3] ^ temp[4*i+0] ^ temp[4*i+1];
+        state[4*i+3] = xtime(temp[4*i+3]) ^ xtime(temp[4*i+0]) ^ temp[4*i+0] ^ temp[4*i+1] ^ temp[4*i+2];
+    }
+}
+
+
+/**
+ * xtime 
+*/
+byte xtime(byte byte1) {
+    int b7 = byte1 >> 7 & 0x01;
+    byte1 = byte1 << 1;
+    if(b7 == 1) {
+        byte1 ^= 0x1b;
+    }
+    return byte1;
 }
 
 
