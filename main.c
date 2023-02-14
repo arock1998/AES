@@ -11,8 +11,6 @@ int main() {
     byte out[16] = {0, };
 
     KeyExpansion(key);
-    PrintW();
-    
     Cipher(in, out);
     PrintArray("output : ", out);
 }
@@ -28,7 +26,6 @@ void Cipher(byte* in, byte* out) {
     for(int i = 0; i < 4*Nb; i++) { 
         state[i] = in[i];
     }
-
     AddRoundKey(state, 0);
     for(int i = 1; i < Nr; i ++) {
         SubBytes(state);
@@ -46,7 +43,6 @@ void Cipher(byte* in, byte* out) {
 }
 
 
-
 /**
  * key expansion 
 */
@@ -57,7 +53,7 @@ void KeyExpansion(byte* key) {
     for(int i = 4; i < Nb*(Nr+1); i++) {
         byte_4 temp = w[i-1];
         if(i % Nk == 0) {
-            temp = SubWord(RotWord(temp)) ^ Rcon_Nr10[i/Nk -1];
+            temp = SubWord(RotWord(temp)) ^ Rcon_Nr10[i/Nk-1];
         } else if (Nk > 6 && (i % Nk == 4)) {
             temp = SubWord(temp);
         }
@@ -81,24 +77,22 @@ void SubBytes(byte* state) {
 */
 void ShiftRows(byte* state) {
     byte temp[Nb];
+    byte t0;
     
     for(int i = 1; i < 4; i++) {
-        // temp에 열 담기
-        for(int j = 0; j < Nb; j++) { //1,5,9,13 //2,6,10,14 //3,6,11,15
+        for(int j = 0; j < Nb; j++) { 
             temp[j] = state[j*Nb+i];
         }
         // i번 만큼 왼쪽으로 이동
         // TODO : 더 좋은 방법이 있지 않을까?
         for(int k = i; k > 0; k--) {
-            byte t0 = (byte)temp[0];
+            t0 = (byte)temp[0];
             for(int l = 0; l < 3; l++) {
                 temp[l] = temp[l+1];
             }
             temp[3] = t0;
-
         }
-        // state에 shift 된 것들 저장
-        for(int j = 0; j < Nb; j++) { //1,5,9,13 //2,6,10,14 //3,6,11,15
+        for(int j = 0; j < Nb; j++) { 
             state[j*Nb+i] = temp[j];
         }
     }
@@ -144,8 +138,7 @@ byte_4 SubWord(byte_4 num) {
     list[1] = s_box[(num >> 16) & 0xFF];
     list[2] = s_box[(num >> 8) & 0xFF];
     list[3] = s_box[(num >> 0) & 0xFF];
-    num = (list[0] << 24) ^ (list[1] << 16) ^ (list[2] << 8) ^ (list[3]);
-    return num;
+    return (list[0] << 24) ^ (list[1] << 16) ^ (list[2] << 8) ^ (list[3]);
 }
 
 
@@ -153,8 +146,7 @@ byte_4 SubWord(byte_4 num) {
  * rot word
 */
 byte_4 RotWord(byte_4 num) {
-    num = ((num << 8) & 0xffffff00) ^ ((num >> 24) & 0xff);
-    return num; 
+    return ((num << 8) & 0xffffff00) ^ ((num >> 24) & 0xff);
 }
 
 

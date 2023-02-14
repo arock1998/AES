@@ -14,13 +14,13 @@ byte_4 Rcon_Nr10[10] = {0x01000000, 0x02000000, 0x04000000, 0x08000000, 0x100000
 
 void Cipher(byte* in, byte* out);
 
-void KeyExpansion(byte* key);                   // 테스트 완료
+void KeyExpansion(byte* key);
 
-void SubBytes(byte* state);                     // 테스트 완료
+void SubBytes(byte* state);
 
-void ShiftRows(byte* state);                    // 테스트 완료
+void ShiftRows(byte* state);
 
-void MixColumns(byte* state);                   // 테스트 완료
+void MixColumns(byte* state);
 
 void AddRoundKey(byte* state, int round);
 
