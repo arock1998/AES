@@ -20,7 +20,17 @@ int main() {
     PrintArray("After ShiftRows",in);
     MixColumns(in);
     PrintArray("After MixColumns",in);
-    
+    AddRoundKey(in, 1);
+    PrintArray("After AddRoundKey1",in); 
+
+    SubBytes(in);
+    PrintArray("After Sbox",in);
+    ShiftRows(in);
+    PrintArray("After ShiftRows",in);
+    MixColumns(in);
+    PrintArray("After MixColumns",in);
+    AddRoundKey(in, 2);
+    PrintArray("After AddRoundKey1",in);   
 
 }
 
@@ -140,12 +150,10 @@ void MixColumns(byte* state) {
 */
 void AddRoundKey(byte* state, int round) {
     for(int i = 0; i < Nb; i++) {
-        // state[] = state[] ^ w[round * Nb +i];
-        state[4*i+0] = state[4*i+0];
-        state[4*i+1] = state[4*i+1];
-        state[4*i+2] = state[4*i+2];
-        state[4*i+3] = state[4*i+3];
-        
+        state[4*i+0] = state[4*i+0] ^ (w[round*Nb+i] >> 24) & 0xff;
+        state[4*i+1] = state[4*i+1] ^ (w[round*Nb+i] >> 16) & 0xff;
+        state[4*i+2] = state[4*i+2] ^ (w[round*Nb+i] >> 8) & 0xff;
+        state[4*i+3] = state[4*i+3] ^ (w[round*Nb+i] >> 0) & 0xff;
     }
 }
 
