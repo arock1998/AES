@@ -7,62 +7,39 @@
 int main() {
 
     byte key[16] = {0x2b,0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c};
-    byte in[16] = {0x19, 0x3d, 0xe3, 0xbe, 0xa0, 0xf4, 0xe2, 0x2b, 0x9a, 0xc6, 0x8d, 0x2a, 0xe9, 0xf8, 0x48, 0x08};
-    byte out[16];
+    byte in[16] = {0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37, 0x07, 0x34};
+    byte out[16] = {0, };
 
     KeyExpansion(key);
     PrintW();
-
-    PrintArray("Before Sbox",in);
-    SubBytes(in);
-    PrintArray("After Sbox",in);
-    ShiftRows(in);
-    PrintArray("After ShiftRows",in);
-    MixColumns(in);
-    PrintArray("After MixColumns",in);
-    AddRoundKey(in, 1);
-    PrintArray("After AddRoundKey1",in); 
-
-    SubBytes(in);
-    PrintArray("After Sbox",in);
-    ShiftRows(in);
-    PrintArray("After ShiftRows",in);
-    MixColumns(in);
-    PrintArray("After MixColumns",in);
-    AddRoundKey(in, 2);
-    PrintArray("After AddRoundKey1",in);   
-
+    
+    Cipher(in, out);
+    PrintArray("output : ", out);
 }
 
 
 /**
  * 암호화 동작 함수
- * TODO : word w[Nb*(Nr+1)] 파라미터로 추가
  * w[] => contains the key schedule
 */
-void Cipher(byte* in[4*Nb], byte* out[4*Nb]) {
-    byte* state[4*Nb];
+void Cipher(byte* in, byte* out) {
+    byte state[4*Nb] = {0, };
 
-    // state = in
     for(int i = 0; i < 4*Nb; i++) { 
         state[i] = in[i];
     }
 
-    // TODO : AddRoundKey (state, w[0, Nb-1])
-
-    for(int i = 0; i < Nr; i ++) {
-        // SubBytes(state)
-        // ShiftRows(State)
-        // MixColumns(state)
-        // AddRoundKey(state, w[round*Nb, (round+1*Nb-1)])
+    AddRoundKey(state, 0);
+    for(int i = 1; i < Nr; i ++) {
+        SubBytes(state);
+        ShiftRows(state);
+        MixColumns(state);
+        AddRoundKey(state, i);
     }
+    SubBytes(state);
+    ShiftRows(state);
+    AddRoundKey(state, Nr);
 
-    // SubBytes(state)
-    // ShiftRows(State)
-    // MixColumns(state)
-    // AddRoundKey(state, w[round*Nb, (round+1*Nb-1)])
-
-    // state = in
     for(int i = 0; i < 4*Nb; i++) {
         out[i] = state[i];
     }
