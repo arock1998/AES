@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "sbox.c"
 
 typedef unsigned char byte;
 typedef unsigned int byte_4;
@@ -8,13 +9,10 @@ typedef unsigned int byte_4;
 #define Nb  4   //  4       4 
 #define Nr  10  //  12      14
 
-byte_4 w[Nr+1] = {0,};
 
-byte_4 Rcon_Nr10[10] = {0x01000000, 0x02000000, 0x04000000, 0x08000000, 0x10000000, 0x20000000, 0x40000000, 0x80000000, 0x1b000000, 0x36000000};
+void Cipher(byte* in, byte* out, byte_4* w);
 
-void Cipher(byte* in, byte* out);
-
-void KeyExpansion(byte* key);
+void KeyExpansion(byte* key, byte_4* w);
 
 void SubBytes(byte* state);
 
@@ -22,7 +20,7 @@ void ShiftRows(byte* state);
 
 void MixColumns(byte* state);
 
-void AddRoundKey(byte* state, int round);
+void AddRoundKey(byte* state, int round, byte_4* w);
 
 byte xtime(byte byte1);
 
