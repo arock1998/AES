@@ -30,6 +30,34 @@ void Cipher(byte* in, byte* out, byte_4* w) {
 
 
 /**
+ * 복호화 동작 함수
+*/
+void InvCipher(byte* in, byte* out, byte_4* w) {
+    byte state[4*Nb] = {0, };
+
+    for(int i = 0; i < 4*Nb; i++) { 
+        state[i] = in[i];
+    }
+
+    AddRoundKey(state, Nr, w);
+    for(int i = Nr-1; i > 0; i--) {
+        InvShiftRows(state);
+        InvSubBytes(state);
+        AddRoundKey(state, i, w);
+        InvMixColumns(state);
+    }
+
+    InvShiftRows(state);
+    InvSubBytes(state);
+    AddRoundKey(state, 0, w);
+
+    for(int i = 0; i < 4*Nb; i++) {
+        out[i] = state[i];
+    }
+}
+
+
+/**
  * key expansion 
 */
 void KeyExpansion(byte* key, byte_4* w) {
@@ -108,7 +136,6 @@ void InvShiftRows(byte* state) {
         for(int j = 0; j < Nb; j++) {
             temp[j] = state[j*Nb+i];
         }
-        printf("%x %x %x %x \n", temp[0], temp[1], temp[2], temp[3]);
         // 오른쪽으로 한칸 씩 이동
         for(int k = i; k > 0; k--) {
             t3 = (byte)temp[3];
@@ -117,7 +144,6 @@ void InvShiftRows(byte* state) {
             }
             temp[0] = t3;
         }
-        printf("%x %x %x %x \n", temp[0], temp[1], temp[2], temp[3]);
         for(int j = 0; j < Nb; j++) {
             state[j*Nb+i] = temp[j];
         }
@@ -180,6 +206,7 @@ void AddRoundKey(byte* state, int round, byte_4* w) {
         state[4*i+1] = state[4*i+1] ^ (w[round*Nb+i] >> 16) & 0xff;
         state[4*i+2] = state[4*i+2] ^ (w[round*Nb+i] >> 8) & 0xff;
         state[4*i+3] = state[4*i+3] ^ (w[round*Nb+i] >> 0) & 0xff;
+        printf("round key : %02x, %02x, %02x, %02x \n", (w[round*Nb+i] >> 24) & 0xff, (w[round*Nb+i] >> 16) & 0xff, (w[round*Nb+i] >> 8) & 0xff,(w[round*Nb+i] >> 0) & 0xff);
     }
 }
 

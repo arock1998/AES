@@ -12,6 +12,8 @@ typedef unsigned int byte_4;
 
 void Cipher(byte* in, byte* out, byte_4* w);
 
+void InvCipher(byte* in, byte* out, byte_4* w);
+
 void KeyExpansion(byte* key, byte_4* w);
 
 void SubBytes(byte* state);
