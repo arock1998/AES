@@ -18,15 +18,16 @@ int main() {
     PrintArray("print inin :  ", inin);
     AddRoundKey(inin, 10, w);
     PrintArray("after addroundkey :  ", inin);
-    // InvMixColumns(inin);
-    // PrintArray("after inverse mix column :  ", inin);
+
     InvShiftRows(inin);
     PrintArray("after shift row          : ", inin);
     InvSubBytes(inin);
     PrintArray("after inverse sub byte   : ", inin);
 
-    
-
+    AddRoundKey(inin, 9, w);
+    PrintArray("after addroundkey :  ", inin);
+    InvMixColumns(inin);
+    PrintArray("after inverse mix column :  ", inin);
 
     
 }

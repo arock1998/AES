@@ -151,15 +151,22 @@ void InvMixColumns(byte* state) {
         temp[i] = state[i];
     }
     for(int i = 0; i < Nb; i++) {
-        // 14*, 11*, 13*, 9*
-        state[4*i+0] = xtime(xtime(xtime(temp[4*i+0]))) ^ xtime(xtime(temp[4*i+0]) ^ temp[4*i+0]) ^ xtime(xtime(xtime(temp[4*i+1]))) ^ xtime(temp[4*i+1]) ^ temp[4*i+1] 
-                    ^ xtime(xtime(xtime(temp[4*i+2]))) ^ xtime(xtime(temp[4*i+2])) ^ temp[4*i+2] ^ xtime(xtime(xtime(temp[4*i+3]))) ^ temp[4*i+3];
-        state[4*i+1] = xtime(xtime(xtime(temp[4*i+1]))) ^ xtime(xtime(temp[4*i+1]) ^ temp[4*i+1]) ^ xtime(xtime(xtime(temp[4*i+2]))) ^ xtime(temp[4*i+2]) ^ temp[4*i+2] 
-                    ^ xtime(xtime(xtime(temp[4*i+3]))) ^ xtime(xtime(temp[4*i+3])) ^ temp[4*i+3] ^ xtime(xtime(xtime(temp[4*i+0]))) ^ temp[4*i+0];
-        state[4*i+2] = xtime(xtime(xtime(temp[4*i+2]))) ^ xtime(xtime(temp[4*i+2]) ^ temp[4*i+0]) ^ xtime(xtime(xtime(temp[4*i+3]))) ^ xtime(temp[4*i+1]) ^ temp[4*i+3] 
-                    ^ xtime(xtime(xtime(temp[4*i+0]))) ^ xtime(xtime(temp[4*i+0])) ^ temp[4*i+0] ^ xtime(xtime(xtime(temp[4*i+1]))) ^ temp[4*i+1];
-        state[4*i+3] = xtime(xtime(xtime(temp[4*i+3]))) ^ xtime(xtime(temp[4*i+3]) ^ temp[4*i+0]) ^ xtime(xtime(xtime(temp[4*i+0]))) ^ xtime(temp[4*i+0]) ^ temp[4*i+0] 
-                    ^ xtime(xtime(xtime(temp[4*i+1]))) ^ xtime(xtime(temp[4*i+1])) ^ temp[4*i+1] ^ xtime(xtime(xtime(temp[4*i+2]))) ^ temp[4*i+2];
+        state[4*i+0] = xtime(xtime(xtime(temp[4*i+0]))) ^ xtime(xtime(temp[4*i+0]) ^ temp[4*i+0])   // *14
+                    ^ xtime(xtime(xtime(temp[4*i+1]))) ^ xtime(temp[4*i+1]) ^ temp[4*i+1]           // *11
+                    ^ xtime(xtime(xtime(temp[4*i+2]))) ^ xtime(xtime(temp[4*i+2])) ^ temp[4*i+2]    // *13
+                    ^ xtime(xtime(xtime(temp[4*i+3]))) ^ temp[4*i+3];                               // *9
+        state[4*i+1] = xtime(xtime(xtime(temp[4*i+1]))) ^ xtime(xtime(temp[4*i+1]) ^ temp[4*i+1]) 
+                    ^ xtime(xtime(xtime(temp[4*i+2]))) ^ xtime(temp[4*i+2]) ^ temp[4*i+2] 
+                    ^ xtime(xtime(xtime(temp[4*i+3]))) ^ xtime(xtime(temp[4*i+3])) ^ temp[4*i+3] 
+                    ^ xtime(xtime(xtime(temp[4*i+0]))) ^ temp[4*i+0];
+        state[4*i+2] = xtime(xtime(xtime(temp[4*i+2]))) ^ xtime(xtime(temp[4*i+2]) ^ temp[4*i+2]) 
+                    ^ xtime(xtime(xtime(temp[4*i+3]))) ^ xtime(temp[4*i+3]) ^ temp[4*i+3] 
+                    ^ xtime(xtime(xtime(temp[4*i+0]))) ^ xtime(xtime(temp[4*i+0])) ^ temp[4*i+0] 
+                    ^ xtime(xtime(xtime(temp[4*i+1]))) ^ temp[4*i+1];
+        state[4*i+3] = xtime(xtime(xtime(temp[4*i+3]))) ^ xtime(xtime(temp[4*i+3]) ^ temp[4*i+3]) 
+                    ^ xtime(xtime(xtime(temp[4*i+0]))) ^ xtime(temp[4*i+0]) ^ temp[4*i+0] 
+                    ^ xtime(xtime(xtime(temp[4*i+1]))) ^ xtime(xtime(temp[4*i+1])) ^ temp[4*i+1] 
+                    ^ xtime(xtime(xtime(temp[4*i+2]))) ^ temp[4*i+2];
     }
 }
 
