@@ -61,6 +61,16 @@ void SubBytes(byte* state) {
 
 
 /**
+ * inverse sub bytes
+*/
+void InvSubBytes(byte* state) {
+    for(int i = 0; i < 4*Nb; i++) {
+        state[i] = inv_s_box[state[i]];
+    }
+}
+
+
+/**
  * shift rows
 */
 void ShiftRows(byte* state) {
@@ -88,6 +98,34 @@ void ShiftRows(byte* state) {
 
 
 /**
+ * inverse shift rows
+*/
+void InvShiftRows(byte* state) {
+    byte temp[Nb];
+    byte t3;
+
+    for(int i = 1; i < 4; i++) {
+        for(int j = 0; j < Nb; j++) {
+            temp[j] = state[j*Nb+i];
+        }
+        printf("%x %x %x %x \n", temp[0], temp[1], temp[2], temp[3]);
+        // 오른쪽으로 한칸 씩 이동
+        for(int k = i; k > 0; k--) {
+            t3 = (byte)temp[3];
+            for(int l = 3; l > 0; l--) {
+                temp[l] = temp[l-1];
+            }
+            temp[0] = t3;
+        }
+        printf("%x %x %x %x \n", temp[0], temp[1], temp[2], temp[3]);
+        for(int j = 0; j < Nb; j++) {
+            state[j*Nb+i] = temp[j];
+        }
+    }
+}
+
+
+/**
  * mix columns
 */
 void MixColumns(byte* state) {
@@ -100,6 +138,28 @@ void MixColumns(byte* state) {
         state[4*i+1] = xtime(temp[4*i+1]) ^ xtime(temp[4*i+2]) ^ temp[4*i+2] ^ temp[4*i+3] ^ temp[4*i+0];
         state[4*i+2] = xtime(temp[4*i+2]) ^ xtime(temp[4*i+3]) ^ temp[4*i+3] ^ temp[4*i+0] ^ temp[4*i+1];
         state[4*i+3] = xtime(temp[4*i+3]) ^ xtime(temp[4*i+0]) ^ temp[4*i+0] ^ temp[4*i+1] ^ temp[4*i+2];
+    }
+}
+
+
+/**
+ * inverse mix columns
+*/
+void InvMixColumns(byte* state) {
+    byte temp[4*Nb];
+    for(int i = 0; i < 4*Nb; i++) {
+        temp[i] = state[i];
+    }
+    for(int i = 0; i < Nb; i++) {
+        // 14*, 11*, 13*, 9*
+        state[4*i+0] = xtime(xtime(xtime(temp[4*i+0]))) ^ xtime(xtime(temp[4*i+0]) ^ temp[4*i+0]) ^ xtime(xtime(xtime(temp[4*i+1]))) ^ xtime(temp[4*i+1]) ^ temp[4*i+1] 
+                    ^ xtime(xtime(xtime(temp[4*i+2]))) ^ xtime(xtime(temp[4*i+2])) ^ temp[4*i+2] ^ xtime(xtime(xtime(temp[4*i+3]))) ^ temp[4*i+3];
+        state[4*i+1] = xtime(xtime(xtime(temp[4*i+1]))) ^ xtime(xtime(temp[4*i+1]) ^ temp[4*i+1]) ^ xtime(xtime(xtime(temp[4*i+2]))) ^ xtime(temp[4*i+2]) ^ temp[4*i+2] 
+                    ^ xtime(xtime(xtime(temp[4*i+3]))) ^ xtime(xtime(temp[4*i+3])) ^ temp[4*i+3] ^ xtime(xtime(xtime(temp[4*i+0]))) ^ temp[4*i+0];
+        state[4*i+2] = xtime(xtime(xtime(temp[4*i+2]))) ^ xtime(xtime(temp[4*i+2]) ^ temp[4*i+0]) ^ xtime(xtime(xtime(temp[4*i+3]))) ^ xtime(temp[4*i+1]) ^ temp[4*i+3] 
+                    ^ xtime(xtime(xtime(temp[4*i+0]))) ^ xtime(xtime(temp[4*i+0])) ^ temp[4*i+0] ^ xtime(xtime(xtime(temp[4*i+1]))) ^ temp[4*i+1];
+        state[4*i+3] = xtime(xtime(xtime(temp[4*i+3]))) ^ xtime(xtime(temp[4*i+3]) ^ temp[4*i+0]) ^ xtime(xtime(xtime(temp[4*i+0]))) ^ xtime(temp[4*i+0]) ^ temp[4*i+0] 
+                    ^ xtime(xtime(xtime(temp[4*i+1]))) ^ xtime(xtime(temp[4*i+1])) ^ temp[4*i+1] ^ xtime(xtime(xtime(temp[4*i+2]))) ^ temp[4*i+2];
     }
 }
 

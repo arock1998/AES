@@ -16,9 +16,15 @@ void KeyExpansion(byte* key, byte_4* w);
 
 void SubBytes(byte* state);
 
+void InvSubBytes(byte* state);
+
 void ShiftRows(byte* state);
 
+void InvShiftRows(byte* state);
+
 void MixColumns(byte* state);
+
+void InvMixColumns(byte* state);
 
 void AddRoundKey(byte* state, int round, byte_4* w);
 

@@ -12,4 +12,21 @@ int main() {
     PrintW(w);
     Cipher(in, out, w);
     PrintArray("output : ", out);
+
+    byte inin[16] = {0x39, 0x25, 0x84, 0x1d, 0x02, 0xdc, 0x09, 0xfb, 0xdc, 0x11, 0x85, 0x97, 0x19, 0x6a, 0x0b, 0x32};
+
+    PrintArray("print inin :  ", inin);
+    AddRoundKey(inin, 10, w);
+    PrintArray("after addroundkey :  ", inin);
+    // InvMixColumns(inin);
+    // PrintArray("after inverse mix column :  ", inin);
+    InvShiftRows(inin);
+    PrintArray("after shift row          : ", inin);
+    InvSubBytes(inin);
+    PrintArray("after inverse sub byte   : ", inin);
+
+    
+
+
+    
 }
