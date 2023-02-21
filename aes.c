@@ -11,22 +11,28 @@ void AESTest(){
     byte output[16] = {0,};
     byte_4 w[(Nr+1)*Nb] = {0,};
 
+    // 키 스케줄링
     KeyExpansion(key, w);
+    PrintArray("plain text  ", plain);
+    PrintArray("key         ", key);
+
+    // 암호화
     Cipher(plain, output, w);
     for(int i = 0; i < Nb*Nk; i++) {
         if(output[0] != right_enc[0]) {
-            printf("Error : 암호화 동작 오류");
+            printf("## Error : 암호화 동작 오류");
         }
     }
-    PrintArray("Success : 암호화 정상 동작 \n## encrypt text", output);
+    printf("## Success : 암호화 정상 동작\n");
 
+    // 복호화
     InvCipher(right_enc, output, w);
     for(int i = 0; i < Nb*Nk; i++) {
         if(output[0] != plain[0]) {
-            printf("Error : 복호화 동작 오류");
+            printf("## Error : 복호화 동작 오류");
         }
     }
-    PrintArray("Success : 복호화 정상 동작 \n## decrypt text", output);
+    printf("## Success : 복호화 정상 동작\n");
 }
 
 
@@ -55,6 +61,7 @@ void Cipher(byte* in, byte* out, byte_4* w) {
     for(int i = 0; i < 4*Nb; i++) {
         out[i] = state[i];
     }
+    PrintArray("encrypt text", out);
 }
 
 
@@ -83,6 +90,7 @@ void InvCipher(byte* in, byte* out, byte_4* w) {
     for(int i = 0; i < 4*Nb; i++) {
         out[i] = state[i];
     }
+    PrintArray("decrypt text", out);
 }
 
 
