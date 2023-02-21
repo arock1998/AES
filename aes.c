@@ -1,5 +1,34 @@
 #include "aes.h"
 
+/**
+ * 암복호화 테스트
+*/
+void AESTest(){
+
+    byte key[16] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
+    byte plain[16] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff};
+    byte right_enc[16] = {0x69, 0xc4, 0xe0, 0xd8, 0x6a, 0x7b, 0x04, 0x30, 0xd8, 0xcd, 0xb7, 0x80, 0x70, 0xb4, 0xc5, 0x5a};
+    byte output[16] = {0,};
+    byte_4 w[(Nr+1)*Nb] = {0,};
+
+    KeyExpansion(key, w);
+    Cipher(plain, output, w);
+    for(int i = 0; i < Nb*Nk; i++) {
+        if(output[0] != right_enc[0]) {
+            printf("Error : 암호화 동작 오류");
+        }
+    }
+    PrintArray("Success : 암호화 정상 동작 \n## encrypt text", output);
+
+    InvCipher(right_enc, output, w);
+    for(int i = 0; i < Nb*Nk; i++) {
+        if(output[0] != plain[0]) {
+            printf("Error : 복호화 동작 오류");
+        }
+    }
+    PrintArray("Success : 복호화 정상 동작 \n## decrypt text", output);
+}
+
 
 /**
  * 암호화 동작 함수
@@ -206,7 +235,6 @@ void AddRoundKey(byte* state, int round, byte_4* w) {
         state[4*i+1] = state[4*i+1] ^ (w[round*Nb+i] >> 16) & 0xff;
         state[4*i+2] = state[4*i+2] ^ (w[round*Nb+i] >> 8) & 0xff;
         state[4*i+3] = state[4*i+3] ^ (w[round*Nb+i] >> 0) & 0xff;
-        printf("round key : %02x, %02x, %02x, %02x \n", (w[round*Nb+i] >> 24) & 0xff, (w[round*Nb+i] >> 16) & 0xff, (w[round*Nb+i] >> 8) & 0xff,(w[round*Nb+i] >> 0) & 0xff);
     }
 }
 
@@ -249,7 +277,7 @@ byte xtime(byte byte1) {
  * 배열 출력 함수
 */
 void PrintArray(char* str, byte* state) {
-    printf("## %s ## : ", str);
+    printf("## %s : ", str);
     for(int i = 0; i < 4*Nb; i++) {
         printf("%02x, ", state[i]);
     }

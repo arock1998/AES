@@ -9,6 +9,7 @@ typedef unsigned int byte_4;
 #define Nb  4   //  4       4 
 #define Nr  10  //  12      14
 
+void AESTest();
 
 void Cipher(byte* in, byte* out, byte_4* w);
 
